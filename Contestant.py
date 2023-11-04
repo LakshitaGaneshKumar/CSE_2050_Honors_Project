@@ -4,10 +4,10 @@ class Contestant():
         self._name = name
         self._found_match = False
         self._perfect_match = None
-        self._invalid_matches = None
+        self._invalid_matches = set()
         self._current_partner = None
-        self._known_invalid_match = None
-        self._possible_matches = None
+        self._known_invalid_matches = set()
+        self._possible_matches = set()
 
     def set_name(self, name): 
         """Sets a new value for name"""
@@ -35,14 +35,11 @@ class Contestant():
     
     def set_invalid_match(self, invalid_match): 
         """Takes in a Contestant object as an invalid match and adds it to the list of invalid matches"""
-        if self._invalid_matches is None:
-            self._invalid_matches = set()
         self._invalid_matches.add(invalid_match)
 
     def get_invalid_matches(self):
         """Returns the set of invalid matches"""
         return self._invalid_matches
-
 
     def set_current_partner(self, current_partner): 
         """Takes in a Contestant object and sets it equal to the current Contestant's current partner"""
@@ -52,10 +49,18 @@ class Contestant():
         """Returns contestant's current partner"""
         return self._current_partner
 
+    def set_known_invalid_match(self, invalid_match): 
+        """Takes in a Contestant object and adds it to the set of known invalid matches"""
+        self._known_invalid_matches.add(invalid_match)
 
-    def set_known_invalid_matches(self, invalid_matches): pass
-    def get_known_invalid_matches(self): pass
+    def get_known_invalid_matches(self): 
+        """Returns the set of known invalid matches"""
+        return self._known_invalid_matches
 
+    def set_possible_match(self, possible_match): 
+        """Takes in a Contestant object and adds it to the set of possible matches, which includes every contestant who is not known to be an invalid match"""
+        self._possible_matches.add(possible_match)
 
-    def set_possible_matches(self, possible_matches): pass
-    def get_possible_matches(self): pass
+    def get_possible_matches(self): 
+        """Returns the set of possible matches"""
+        return self._possible_matches

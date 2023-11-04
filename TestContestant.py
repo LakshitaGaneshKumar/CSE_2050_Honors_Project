@@ -21,8 +21,6 @@ class TestContestant(unittest.TestCase):
 
         self.assertEqual(self.person.get_name(), "Jane Doe 2") 
         self.assertEqual(self.person2.get_name(), "John Doe 2") 
-
-        print("Set/Get Name Tests Complete.")
     
     def test_found_match(self):
         """Test set and get found match methods"""
@@ -38,8 +36,6 @@ class TestContestant(unittest.TestCase):
         self.assertNotEqual(self.person.get_found_match(), False)
         self.assertNotEqual(self.person2.get_found_match(), False)
 
-        print("Set/Get Found Match Tests Complete.")
-
     def test_perfect_match(self):
         """Test set and get perfect match methods"""
         self.assertEqual(self.person.get_perfect_match(), None)
@@ -50,13 +46,11 @@ class TestContestant(unittest.TestCase):
         
         self.assertEqual(self.person.get_perfect_match(), self.person2)
         self.assertEqual(self.person2.get_perfect_match(), self.person)
-
-        print("Set/Get Perfect Match Tests Complete.")
     
     def test_invalid_matches(self):
         """Test set and get invalid matches methods"""
-        self.assertEqual(self.person.get_invalid_matches(), None)
-        self.assertEqual(self.person2.get_invalid_matches(), None)
+        self.assertEqual(self.person.get_invalid_matches(), set())
+        self.assertEqual(self.person2.get_invalid_matches(), set())
 
         self.person.set_invalid_match(self.invalid1)
         self.person.set_invalid_match(self.invalid2)
@@ -69,8 +63,6 @@ class TestContestant(unittest.TestCase):
         self.assertEqual(self.person.get_invalid_matches(), {self.invalid1, self.invalid2, self.invalid3})
         self.assertEqual(self.person2.get_invalid_matches(), {self.invalid1, self.invalid2, self.invalid3})
 
-        print("Set/Get Invalid Matches Tests Complete.")
-
     def test_current_partner(self):
         """Test set and get current partner methods"""
         self.assertEqual(self.person.get_current_partner(), None)
@@ -82,19 +74,26 @@ class TestContestant(unittest.TestCase):
         self.assertEqual(self.person.get_current_partner(), self.person2)
         self.assertEqual(self.person2.get_current_partner(), self.person)
 
-        print("Set/Get Current Partner Tests Complete.")
+    def test_known_invalid_matches(self):
+        """Test set and get known invalid matches methods"""
+        self.assertEqual(self.person.get_known_invalid_matches(), set())
+        self.assertEqual(self.person2.get_known_invalid_matches(), set())
 
-    # def test_known_invalid_matches(self):
-    #     """Test set and get known invalid matches"""
-    #     self.assertEqual(self.person.get_known_invalid_matches(), None)
-    #     self.assertEqual(self.person2.get_known_invalid_matches(), None)
+        self.person.set_known_invalid_match(self.person2)
+        self.person2.set_known_invalid_match(self.person)
 
-    #     self.
+        self.assertEqual(self.person.get_known_invalid_matches(), {self.person2})
+        self.assertEqual(self.person2.get_known_invalid_matches(), {self.person})
 
-    #     self.assertEqual(self.person.get_possible_matches(), None)
-    #     self.assertEqual(self.person2.get_possible_matches(), None)
+    def test_possible_matches(self):
+        """Test set and get possible matches methods"""
+        self.assertEqual(self.person.get_possible_matches(), set())
+        self.assertEqual(self.person2.get_possible_matches(), set())
 
-    #     self.person.set_current_partner(self.person2)
-    #     self.person2.set_current_partner(self.person)
+        self.person.set_possible_match(self.person2)
+        self.person2.set_possible_match(self.person)
+
+        self.assertEqual(self.person.get_possible_matches(), {self.person2})
+        self.assertEqual(self.person2.get_possible_matches(), {self.person})
 
 unittest.main()
