@@ -5,37 +5,31 @@
 
 # Imports
 from Contestant import Contestant
+from GamePlay import GamePlay
 
 # Constants
-NUM_CONTESTANTS = 16
+NUM_CONTESTANTS = 1
 
 # Welcome Message
 print("Welcome to Are You The One!")
 
-# Get user input for contestant objects
-print("Pick Your Players (Input first and last name of each contestant)")
+# Prompt User for Number of Contestants
+# This will be implemented as buttons in the GUI
+while(NUM_CONTESTANTS % 2 != 0 or NUM_CONTESTANTS < 4):
+    NUM_CONTESTANTS = int(input("Choose your number of contestants (enter an even number between 4-16): "))
+print(f'Get ready to play "Are You The One?" With {NUM_CONTESTANTS} Contestants!')
 
-# Create new set to store all Contestant objects in play
-contestants = set()
+# Start new game play
+game = GamePlay(NUM_CONTESTANTS)
 
-# Repeatedly prompt user for a contestant name, create new Contestant object, and add it to the contestants set
-for i in range(NUM_CONTESTANTS):
-    name = input(f"Contestant {i}: ")
-    contestants.add(Contestant(name))
+# Create Contestant Objects
+game.create_players()
 
-
-# Contestant Object attributes: 
-    # name - name of contestant
-    # perfect match - contestant's perfect match
-    # found perfect match - True/False if contestant found their perfect match
-    # invalid matches - list of every but the contestant and their perfect match
-    # current partner - current partner during this week
-    # current partner is valid - True or False if current partnet is perfect match or not
-    # known invalid matches - list of matches that are known to be invalid in the gameplay
-    # possible matches - list of possible matches based on who we know to be an invalid match. (Everyone but the contestant and their invalid matches)
-# Contestant object methods: getter and setter methods
 
 # Randomly choose 8 perfect pairs
+
+
+
 # Update person objects w/ their pairs
 
 # Track number of weeks played
