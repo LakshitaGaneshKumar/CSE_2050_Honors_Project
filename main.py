@@ -1,3 +1,8 @@
+import PySimpleGUI as sg
+#https://realpython.com/pysimplegui-python/
+
+sg.Window(title="Hello World", layout=[[]], margins=(1000, 1000)).read()
+
 # Display welcome message
 
 # Get user input for contestant objects
