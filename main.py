@@ -1,11 +1,29 @@
-import PySimpleGUI as sg
-#https://realpython.com/pysimplegui-python/
+# import PySimpleGUI as sg
+# #https://realpython.com/pysimplegui-python/
 
-sg.Window(title="Hello World", layout=[[]], margins=(1000, 1000)).read()
+# sg.Window(title="Hello World", layout=[[]], margins=(1000, 1000)).read()
 
-# Display welcome message
+# Imports
+from Contestant import Contestant
+
+# Constants
+NUM_CONTESTANTS = 16
+
+# Welcome Message
+print("Welcome to Are You The One!")
 
 # Get user input for contestant objects
+print("Pick Your Players (Input first and last name of each contestant)")
+
+# Create new set to store all Contestant objects in play
+contestants = set()
+
+# Repeatedly prompt user for a contestant name, create new Contestant object, and add it to the contestants set
+for i in range(NUM_CONTESTANTS):
+    name = input(f"Contestant {i}: ")
+    contestants.add(Contestant(name))
+
+
 # Contestant Object attributes: 
     # name - name of contestant
     # perfect match - contestant's perfect match
