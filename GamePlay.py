@@ -9,6 +9,7 @@ class GamePlay():
         self._perfect_matches = {}
         self._current_pairs = {}
         self._weeks_played = 0
+        self._paired = set()
 
     def add_contestant(self, contestant):
         """Takes in a contestant name, creates a new Contestant object, and adds it to the set of current contestant"""
@@ -69,39 +70,65 @@ class GamePlay():
                 if self._perfect_matches[other] != self._perfect_matches[key]:
                     key.set_invalid_match(self._perfect_matches[other])
 
-    def create_current_matches(self):
-        """Generates random matches for current week"""
-        # Create empty set to track who has been paired
-        paired = set()
-        self.contestants_copy = self._contestants.copy()
+    def pair_known_perfect_matches(self):
+        """Pairs up perfect matches that are already found in the game play"""
+        self._paired = set()
 
         for contestant in self._contestants:
-            # Check if contestant has already been paired
-            if contestant in paired:
-                continue
+            if contestant not in self._paired and contestant.get_found_match():
+                # Set current partners to each other's perfect match
+                match = contestant.get_perfect_match()
+                contestant.set_current_partner(match)
+                match.set_current_partner(contestant)
+                
+                # Update set of paired contestant
+                self._paired.add(contestant)
+                self._paired.add(match)
 
-            # Check if current Contestant's perfect match has been found. If so, pair them with their perfect match
-            if contestant.get_found_match():
-                contestant.set_current_partner(contestant.get_perfect_match())
-                contestant.get_perfect_match().set_current_partner(contestant)
+                # Update current pairs dictionary
+                self._current_pairs[contestant] = match
+                self._current_pairs[match] = contestant
 
-            # Else, pop a random contestant from the copied set and set them as the current partner as long they aren't already paired up or are a known invalid match
-            else:
-                pair = self.contestants_copy.pop()
 
-                # If the chosen pair is known to be an invalid match, add them back into the set of contestants and pop another contestant off to check if they are a known invalid or not
-                while(pair in paired or pair in contestant.get_known_invalid_matches() or pair == contestant):
-                    self.contestants_copy.add(pair)
-                    pair = self.contestants_copy.pop()
+    # def create_current_matches(self):
+    #     """Generates random matches for current week"""
+    #     # Create empty set to track who has been paired
+    #     paired = set()
 
-                # Update current partners
-                contestant.set_current_partner(pair)
-                pair.set_current_partner(contestant)
+    #     for contestant in self._contestants:
+    #         print(f"Current: {contestant.get_name()}")
+    #         # Check if contestant has already been paired. If so, just skip over them and continue with the for loop
+    #         self.contestants_copy = self._contestants.copy()
 
-            # Add new key:value pairs to current pairs dictionary
-            self._current_pairs[contestant.get_name()] = contestant.get_current_partner().get_name()
-            self._current_pairs[contestant.get_current_partner().get_name()] = contestant.get_name()
+    #         if contestant in paired:
+    #             print(f"This Happened with {contestant.get_name()}")
+    #             continue
 
-            # Update set of paired contestants
-            paired.add(contestant)
-            paired.add(contestant.get_current_partner())
+    #         # Check if current Contestant's perfect match has been found. If so, pair them with their perfect match
+    #         elif contestant.get_found_match():
+    #             contestant.set_current_partner(contestant.get_perfect_match())
+    #             contestant.get_perfect_match().set_current_partner(contestant)
+
+    #         # Else, pop a random contestant from the copied set and set them as the current partner as long they aren't already paired up or are a known invalid match
+    #         else:
+    #             pair = None
+
+    #             # If the chosen pair is known to be an invalid match, add them back into the set of contestants and pop another contestant off to check if they are a known invalid or not
+    #             while(pair is None or pair in paired or pair in contestant.get_known_invalid_matches() or pair == contestant):
+    #                 # self.contestants_copy.add(pair)
+    #                 pair = self.contestants_copy.pop()
+    #                 print(f"possible pair: {pair.get_name()}")
+
+    #             # Update current partners
+    #             contestant.set_current_partner(pair)
+    #             pair.set_current_partner(contestant)
+
+    #         # Add new key:value pairs to current pairs dictionary
+    #         self._current_pairs[contestant] = contestant.get_current_partner()
+    #         self._current_pairs[contestant.get_current_partner()] = contestant
+
+    #         # Update set of paired contestants
+    #         paired.add(contestant)
+    #         paired.add(contestant.get_current_partner())
+
+    #         print(f"partner: {contestant.get_current_partner().get_name()}")

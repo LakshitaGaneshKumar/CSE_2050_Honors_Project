@@ -41,8 +41,8 @@ game.increment_weeks()
 os.system('clear')
 print(f"Welcome to Week {game.get_weeks_played()}. Will you find all the matches?")
 
-# Randomly pair up contestants
-game.create_current_matches()
+# First pair up contestants that have already found their matches
+game.pair_known_perfect_matches()
 
 #TODO:
 print(f"CURRENT PAIRS: {game.get_current_pairs()}")
