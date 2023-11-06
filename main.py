@@ -8,31 +8,33 @@ from Contestant import Contestant
 from GamePlay import GamePlay
 
 # Constants
-NUM_CONTESTANTS = 1
+NUM_CONTESTANTS = None
+MIN_CONTESTANTS = 4
+MAX_CONTESTANTS = 16
 
 # Welcome Message
 print("Welcome to Are You The One!")
 
 # Prompt User for Number of Contestants
 # This will be implemented as buttons in the GUI
-while(NUM_CONTESTANTS % 2 != 0 or NUM_CONTESTANTS < 4):
+while(NUM_CONTESTANTS is None or NUM_CONTESTANTS % 2 != 0 or NUM_CONTESTANTS < MIN_CONTESTANTS or NUM_CONTESTANTS > MAX_CONTESTANTS):
     NUM_CONTESTANTS = int(input("Choose your number of contestants (enter an even number between 4-16): "))
-print(f'Get ready to play "Are You The One?" With {NUM_CONTESTANTS} Contestants!')
 
-# Start new game play
+# Start new game play with given number of contestant
+print(f'\nGet ready to play "Are You The One?" With {NUM_CONTESTANTS} Contestants!')
 game = GamePlay(NUM_CONTESTANTS)
 
 # Create Contestant Objects
-game.create_players()
+print("Create Your Players (input first and last name of each contestant):")
+for i in range(1, NUM_CONTESTANTS + 1):
+    name = input(f"Contestant {i}: ")
+    game.add_contestant(name)
 
-
-# Randomly choose 8 perfect pairs
-
-
-
-# Update person objects w/ their pairs
+# Randomly choose perfect pairs
+game.create_matches()
 
 # Track number of weeks played
+game.increment_weeks()
 
 # Randomly pair up contestants
 
