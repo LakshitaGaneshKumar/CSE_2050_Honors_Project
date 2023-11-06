@@ -1,134 +1,104 @@
-# Imports
-from Contestant import Contestant
+from GameData import GameData
+import os
 
 class GamePlay():
-    def __init__(self, num_contestants):
-        self._num_contestants = num_contestants
-        self._num_pairs = self._num_contestants // 2
-        self._contestants = set()
-        self._perfect_matches = {}
-        self._current_pairs = {}
-        self._weeks_played = 0
-        self._paired = set()
+    def __init__(self):
+        """Initialize a new Game play object"""
+        # Create Constants
+        self.NUM_CONTESTANTS = None
+        self.MIN_CONTESTANTS = 6
+        self.MAX_CONTESTANTS = 16
 
-    def add_contestant(self, contestant):
-        """Takes in a contestant name, creates a new Contestant object, and adds it to the set of current contestant"""
-        self._contestants.add(Contestant(contestant))
+    def new_game(self):
+        # Welcome Message
+        os.system('clear')
+        print("Welcome to Are You The One!")
 
-    def get_contestants(self):
-        """Returns the set of all Contestant objects in the current game play"""
-        return self._contestants
-    
-    def get_num_contestants(self):
-        """Returns the number of contestants"""
-        return self._num_contestants
-    
-    def get_num_pairs(self):
-        """Returns the number of pairs"""
-        return self._num_pairs
-    
-    def get_perfect_matches(self):
-        """Returns the dictionary of all perfect matches"""
-        return self._perfect_matches
-    
-    def get_current_pairs(self):
-        """Returns the dictionary of all current pairs"""
-        return self._current_pairs
-        
-    def get_weeks_played(self):
-        """Returns the number of weeks played"""
-        return self._weeks_played
-    
-    def increment_weeks(self):
-        """Increment the number of weeks played"""
-        self._weeks_played += 1
+        # Prompt User for Number of Contestants
+        # This will be implemented as buttons in the GUI
+        while(self.NUM_CONTESTANTS is None or self.NUM_CONTESTANTS % 2 != 0 or self.NUM_CONTESTANTS < self.MIN_CONTESTANTS or self.NUM_CONTESTANTS > self.MAX_CONTESTANTS):
+            self.NUM_CONTESTANTS = int(input(f"Choose your number of contestants (enter an even number between {self.MIN_CONTESTANTS}-{self.MAX_CONTESTANTS}): "))
 
-    def create_perfect_matches(self):
-        """Generates perfect matches and updates Contestant objects with their perfect match"""
-        # Create copy of contestants set
-        self.contestants_copy = self._contestants.copy()
+        # Create new game database with given number of contestant
+        os.system('clear')
+        print(f'Get ready to play "Are You The One?" With {self.NUM_CONTESTANTS} Contestants!')
+        self.game = GameData(self.NUM_CONTESTANTS)
 
-        # Update each contestant with their perfect match
-        for i in range(self._num_pairs):
-            # Pop contestants from the copied set and store them in temporary variables
-            contestant1 = self.contestants_copy.pop()
-            contestant2 = self.contestants_copy.pop()
+        # Create Contestant Objects
+        print("Create Your Players (input names of each contestant):")
+        for i in range(1, self.NUM_CONTESTANTS + 1):
+            name = input(f"Contestant {i}: ")
+            self.game.add_contestant(name)
+
+        # Randomly choose perfect pairs
+        self.game.create_perfect_matches()
+
+        self.simulate_week()
+
+    def display_current_pairs(self):
+        """Displays current week's pairs"""
+        displayed = []
+        current_pairs = self.game.get_current_pairs()
+        self.num_perfect_pairs_found = 0
+        print("\nHere's this week's line-up of couples:")
+        for key in current_pairs:
+            if key not in displayed:
+                # Print contestant's name and their match
+                print(f"{key.get_name()} and {current_pairs[key].get_name()}")
+
+                # Track how many perfect matches have been found
+                if key.get_perfect_match() == current_pairs[key]:
+                    self.num_perfect_pairs_found += 1
+
+                # Update the list of contestants who have been displayed on screen already
+                displayed.append(key)
+                displayed.append(current_pairs[key])
+
+    def display_perfect_matches(self):
+        """Displays the perfect matches for testing purposes"""
+        displayed = []
+        perfect_pairs = self.game.get_perfect_matches()
+        print("\nPerfect Matches:")
+        for key in perfect_pairs:
+            if key not in displayed:
+                print(f"{key.get_name()} and {perfect_pairs[key].get_name()}")
+                displayed.append(key)
+                displayed.append(perfect_pairs[key])
+
+    def simulate_week(self):
+        """Simulate one week of the game play"""
+        # Track number of weeks played
+        self.game.increment_weeks()
+        os.system('clear')
+        print(f"Welcome to Week {self.game.get_weeks_played()}.")
+
+        # Pair up matches for the current week
+        self.game.pair_current_matches()
+
+        # Display current pairs
+        self.display_current_pairs()
+        self.display_perfect_matches()
+
+        # Check if all perfect matches have been found
+        if self.num_perfect_pairs_found == self.NUM_CONTESTANTS // 2:
+            weeks = self.game.get_weeks_played()
+
+            # Grammatical check
+            if weeks == 1: 
+                string = "week"
+            else: 
+                string = "weeks"
+
+            print(f"All perfect matches have been found! You helped all contestants find their true love in {self.game.get_weeks_played()} {string}.")
+            replay = input("Would you like to play again? (Y/N): ")
             
-            # Use temporary variables to update the perfect match attributes of each contestant
-            contestant1.set_perfect_match(contestant2)
-            contestant2.set_perfect_match(contestant1)
+            if replay == "Y": 
+                self.__init__()
+                self.new_game()
+            else: 
+                os.system('clear')
+                print('\nThanks for playing "Are You The One?".')
+        else:
+            print(f"Number of Perfect Matches Found: {self.num_perfect_pairs_found}")
 
-            # Add new key value pairs to perfect matches dictionary 
-            self._perfect_matches[contestant1] = contestant2
-            self._perfect_matches[contestant2] = contestant1
-
-        # Traverse through each key:value pair in the perfect matches dictionary and update the invalid matches attribute for each Contestant object
-        for key in self._perfect_matches:
-            for other in self._perfect_matches:
-                if other != self._perfect_matches[key]:
-                    key.set_invalid_match(other)
-                if self._perfect_matches[other] != self._perfect_matches[key]:
-                    key.set_invalid_match(self._perfect_matches[other])
-
-    def pair_known_perfect_matches(self):
-        """Pairs up perfect matches that are already found in the game play"""
-        self._paired = set()
-
-        for contestant in self._contestants:
-            if contestant not in self._paired and contestant.get_found_match():
-                # Set current partners to each other's perfect match
-                match = contestant.get_perfect_match()
-                contestant.set_current_partner(match)
-                match.set_current_partner(contestant)
-                
-                # Update set of paired contestant
-                self._paired.add(contestant)
-                self._paired.add(match)
-
-                # Update current pairs dictionary
-                self._current_pairs[contestant] = match
-                self._current_pairs[match] = contestant
-
-
-    # def create_current_matches(self):
-    #     """Generates random matches for current week"""
-    #     # Create empty set to track who has been paired
-    #     paired = set()
-
-    #     for contestant in self._contestants:
-    #         print(f"Current: {contestant.get_name()}")
-    #         # Check if contestant has already been paired. If so, just skip over them and continue with the for loop
-    #         self.contestants_copy = self._contestants.copy()
-
-    #         if contestant in paired:
-    #             print(f"This Happened with {contestant.get_name()}")
-    #             continue
-
-    #         # Check if current Contestant's perfect match has been found. If so, pair them with their perfect match
-    #         elif contestant.get_found_match():
-    #             contestant.set_current_partner(contestant.get_perfect_match())
-    #             contestant.get_perfect_match().set_current_partner(contestant)
-
-    #         # Else, pop a random contestant from the copied set and set them as the current partner as long they aren't already paired up or are a known invalid match
-    #         else:
-    #             pair = None
-
-    #             # If the chosen pair is known to be an invalid match, add them back into the set of contestants and pop another contestant off to check if they are a known invalid or not
-    #             while(pair is None or pair in paired or pair in contestant.get_known_invalid_matches() or pair == contestant):
-    #                 # self.contestants_copy.add(pair)
-    #                 pair = self.contestants_copy.pop()
-    #                 print(f"possible pair: {pair.get_name()}")
-
-    #             # Update current partners
-    #             contestant.set_current_partner(pair)
-    #             pair.set_current_partner(contestant)
-
-    #         # Add new key:value pairs to current pairs dictionary
-    #         self._current_pairs[contestant] = contestant.get_current_partner()
-    #         self._current_pairs[contestant.get_current_partner()] = contestant
-
-    #         # Update set of paired contestants
-    #         paired.add(contestant)
-    #         paired.add(contestant.get_current_partner())
-
-    #         print(f"partner: {contestant.get_current_partner().get_name()}")
+        
