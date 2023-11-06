@@ -34,7 +34,7 @@ for i in range(1, NUM_CONTESTANTS + 1):
     game.add_contestant(name)
 
 # Randomly choose perfect pairs
-game.create_matches()
+game.create_perfect_matches()
 
 # Track number of weeks played
 game.increment_weeks()
@@ -42,6 +42,10 @@ os.system('clear')
 print(f"Welcome to Week {game.get_weeks_played()}. Will you find all the matches?")
 
 # Randomly pair up contestants
+game.create_current_matches()
+
+#TODO:
+print(f"CURRENT PAIRS: {game.get_current_pairs()}")
 
 # Check if all matches are found
 

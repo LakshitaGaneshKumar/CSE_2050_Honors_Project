@@ -25,13 +25,13 @@ class TestGamePlay(unittest.TestCase):
         for contestant in self.game.get_contestants():
             assert contestant.get_name() in self.players
 
-    def test_create_matches(self):
+    def test_create_perfect_matches(self):
         """Test Create Matches"""
         n = 16
         for i in range(n):
             self.game.add_contestant(f"{i}")
 
-        self.game.create_matches()
+        self.game.create_perfect_matches()
 
         for contestant in self.game.get_contestants():
             self.assertEqual(self.game.get_perfect_matches()[contestant], contestant.get_perfect_match())
