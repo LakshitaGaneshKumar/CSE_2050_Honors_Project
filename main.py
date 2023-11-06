@@ -6,6 +6,7 @@
 # Imports
 from Contestant import Contestant
 from GamePlay import GamePlay
+import os
 
 # Constants
 NUM_CONTESTANTS = None
@@ -13,6 +14,7 @@ MIN_CONTESTANTS = 4
 MAX_CONTESTANTS = 16
 
 # Welcome Message
+os.system('clear')
 print("Welcome to Are You The One!")
 
 # Prompt User for Number of Contestants
@@ -21,7 +23,8 @@ while(NUM_CONTESTANTS is None or NUM_CONTESTANTS % 2 != 0 or NUM_CONTESTANTS < M
     NUM_CONTESTANTS = int(input("Choose your number of contestants (enter an even number between 4-16): "))
 
 # Start new game play with given number of contestant
-print(f'\nGet ready to play "Are You The One?" With {NUM_CONTESTANTS} Contestants!')
+os.system('clear')
+print(f'Get ready to play "Are You The One?" With {NUM_CONTESTANTS} Contestants!')
 game = GamePlay(NUM_CONTESTANTS)
 
 # Create Contestant Objects
@@ -35,6 +38,8 @@ game.create_matches()
 
 # Track number of weeks played
 game.increment_weeks()
+os.system('clear')
+print(f"Welcome to Week {game.get_weeks_played()}. Will you find all the matches?")
 
 # Randomly pair up contestants
 
