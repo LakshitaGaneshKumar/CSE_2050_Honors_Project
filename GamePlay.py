@@ -1,28 +1,24 @@
 from GameData import GameData
 import os
+import time
 
 class GamePlay():
     def __init__(self):
         """Initialize a new Game play object"""
-        # Create Constants
-        self.NUM_CONTESTANTS = None
-        self.MIN_CONTESTANTS = 6
-        self.MAX_CONTESTANTS = 16
+        self.NUM_CONTESTANTS = 16
+
 
     def new_game(self):
         # Welcome Message
         os.system('clear')
         print("Welcome to Are You The One!")
 
-        # Prompt User for Number of Contestants
-        # This will be implemented as buttons in the GUI
-        while(self.NUM_CONTESTANTS is None or self.NUM_CONTESTANTS % 2 != 0 or self.NUM_CONTESTANTS < self.MIN_CONTESTANTS or self.NUM_CONTESTANTS > self.MAX_CONTESTANTS):
-            self.NUM_CONTESTANTS = int(input(f"Choose your number of contestants (enter an even number between {self.MIN_CONTESTANTS}-{self.MAX_CONTESTANTS}): "))
-
-        # Create new game database with given number of contestant
+        # Create new game database
         os.system('clear')
         print(f'Get ready to play "Are You The One?" With {self.NUM_CONTESTANTS} Contestants!')
         self.game = GameData(self.NUM_CONTESTANTS)
+
+        time.sleep(1)
 
         # Create Contestant Objects
         print("Create Your Players (input names of each contestant):")
@@ -32,7 +28,8 @@ class GamePlay():
 
         # Randomly choose perfect pairs
         self.game.create_perfect_matches()
-
+        
+        # Start simulating weeks
         self.simulate_week()
 
     def display_current_pairs(self):
@@ -40,8 +37,12 @@ class GamePlay():
         displayed = []
         current_pairs = self.game.get_current_pairs()
         self.num_perfect_pairs_found = 0
+
+        time.sleep(1)
+
         print("\nHere's this week's line-up of couples:")
         for key in current_pairs:
+            time.sleep(0.2)
             if key not in displayed:
                 # Print contestant's name and their match
                 print(f"{key.get_name()} and {current_pairs[key].get_name()}")
@@ -58,7 +59,7 @@ class GamePlay():
         """Displays the perfect matches for testing purposes"""
         displayed = []
         perfect_pairs = self.game.get_perfect_matches()
-        print("\nPerfect Matches:")
+        print("\nPerfect Matches for Testing Purposes:")
         for key in perfect_pairs:
             if key not in displayed:
                 print(f"{key.get_name()} and {perfect_pairs[key].get_name()}")
@@ -70,6 +71,8 @@ class GamePlay():
         # Track number of weeks played
         self.game.increment_weeks()
         os.system('clear')
+        time.sleep(2)
+
         print(f"Welcome to Week {self.game.get_weeks_played()}.")
 
         # Pair up matches for the current week
@@ -98,7 +101,33 @@ class GamePlay():
             else: 
                 os.system('clear')
                 print('\nThanks for playing "Are You The One?".')
+
+        # Else, if not all matches are found, prompt user to send a couple to the truth booth, and continue simulating weeks
         else:
             print(f"Number of Perfect Matches Found: {self.num_perfect_pairs_found}")
+            self.truth_booth()
 
+    def truth_booth(self):
+        """Prompts user to send a couple to the truth booth and updates game database accordingly"""
+        # User will input a couple in the format "contestant and match", which is then split into a list format
+        couple = input(f"Choose a couple to send to the Truth Booth: ")
+        couple_as_list = couple.split()
+
+        # Extract data on the given couple
+        contestants_to_objects = self.game.get_contestants_to_objects()
+        contestant = contestants_to_objects[couple_as_list[0]]
+        partner = contestant.get_current_partner()
+
+        # Check if they are a perfect match or not
+        if contestant.get_perfect_match() == partner:
+            contestant.set_found_match(True)
+            partner.set_found_match(True)
+            print(f"{contestant.get_name()} and {partner.get_name()} are a perfect match! They will always be paired together now.")
+        else:
+            contestant.set_known_invalid_match(partner)
+            partner.set_known_invalid_match(contestant)
+            print(f"{contestant.get_name()} and {partner.get_name()} are not a perfect match. They will never be paired together again.")
+
+        time.sleep(3)
         
+        self.simulate_week()

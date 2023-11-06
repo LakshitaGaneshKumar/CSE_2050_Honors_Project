@@ -18,3 +18,7 @@ for i in range(9):
 print(f"Before: {empty_set}")
 empty_set.remove(contestant)
 print(f"After: {empty_set}")
+
+string = "This is a sentence"
+x = string.split()
+print(x)

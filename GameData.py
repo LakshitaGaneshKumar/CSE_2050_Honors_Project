@@ -1,4 +1,3 @@
-# Imports
 from Contestant import Contestant
 
 class GameData():
@@ -8,17 +7,24 @@ class GameData():
         self._contestants = set()
         self._perfect_matches = {}
         self._current_pairs = {}
+        self._contestants_to_objects = {}
         self._weeks_played = 0
         self._paired = set()
 
     def add_contestant(self, contestant):
         """Takes in a contestant name, creates a new Contestant object, and adds it to the set of current contestant"""
-        self._contestants.add(Contestant(contestant))
+        player = Contestant(contestant)
+        self._contestants.add(player)
+        self._contestants_to_objects[contestant] = player
 
     def get_contestants(self):
         """Returns the set of all Contestant objects in the current game play"""
         return self._contestants
     
+    def get_contestants_to_objects(self):
+        """Returns the dictionary of all key:value pairs that map a string representation of a contestant's name to their Contestant object"""
+        return self._contestants_to_objects
+
     def get_num_contestants(self):
         """Returns the number of contestants"""
         return self._num_contestants
@@ -101,10 +107,11 @@ class GameData():
         for contestant in self._contestants:
             if contestant not in self._paired:
                 invalids = contestant.get_known_invalid_matches()
-                match = None
+                if len(self.contestants_copy) > 0:
+                    match = self.contestants_copy.pop()
 
                 # Find a potential match
-                while(match is None or match in self._paired or match in invalids or match == contestant):
+                while((match in self._paired or match in invalids or match == contestant) and len(self.contestants_copy) > 0):
                     match = self.contestants_copy.pop()
 
                 # Update database
