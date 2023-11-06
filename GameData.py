@@ -107,8 +107,7 @@ class GameData():
         for contestant in self._contestants:
             if contestant not in self._paired:
                 invalids = contestant.get_known_invalid_matches()
-                if len(self.contestants_copy) > 0:
-                    match = self.contestants_copy.pop()
+                match = self.contestants_copy.pop()
 
                 # Find a potential match
                 while((match in self._paired or match in invalids or match == contestant) and len(self.contestants_copy) > 0):

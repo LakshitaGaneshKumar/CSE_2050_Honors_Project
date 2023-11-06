@@ -128,6 +128,6 @@ class GamePlay():
             partner.set_known_invalid_match(contestant)
             print(f"{contestant.get_name()} and {partner.get_name()} are not a perfect match. They will never be paired together again.")
 
-        time.sleep(3)
+        time.sleep(1)
         
         self.simulate_week()
