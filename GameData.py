@@ -12,9 +12,16 @@ class GameData():
         self._paired = set()
 
     def add_contestant(self, contestant):
-        """Takes in a contestant name, creates a new Contestant object, and adds it to the set of current contestant"""
+        """
+        Adds a new contestant to the game
+        
+        Parameters:
+        contestant (String)
+        """
         player = Contestant(contestant)
         self._contestants.add(player)
+
+        # Maps the string representation of the contestant's name to its Contestant object representation
         self._contestants_to_objects[contestant] = player
 
     def get_contestants(self):
@@ -22,7 +29,7 @@ class GameData():
         return self._contestants
     
     def get_contestants_to_objects(self):
-        """Returns the dictionary of all key:value pairs that map a string representation of a contestant's name to their Contestant object"""
+        """Returns the dictionary of all key:value pairs that map a string representation of a contestant's name to its Contestant object"""
         return self._contestants_to_objects
 
     def get_num_contestants(self):

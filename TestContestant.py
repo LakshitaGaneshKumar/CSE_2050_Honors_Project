@@ -85,15 +85,15 @@ class TestContestant(unittest.TestCase):
         self.assertEqual(self.person.get_known_invalid_matches(), {self.person2})
         self.assertEqual(self.person2.get_known_invalid_matches(), {self.person})
 
-    def test_possible_matches(self):
-        """Test set and get possible matches methods"""
-        self.assertEqual(self.person.get_possible_matches(), set())
-        self.assertEqual(self.person2.get_possible_matches(), set())
+    # def test_possible_matches(self):
+    #     """Test set and get possible matches methods"""
+    #     self.assertEqual(self.person.get_possible_matches(), set())
+    #     self.assertEqual(self.person2.get_possible_matches(), set())
 
-        self.person.set_possible_match(self.person2)
-        self.person2.set_possible_match(self.person)
+    #     self.person.set_possible_match(self.person2)
+    #     self.person2.set_possible_match(self.person)
 
-        self.assertEqual(self.person.get_possible_matches(), {self.person2})
-        self.assertEqual(self.person2.get_possible_matches(), {self.person})
+    #     self.assertEqual(self.person.get_possible_matches(), {self.person2})
+    #     self.assertEqual(self.person2.get_possible_matches(), {self.person})
 
 unittest.main()

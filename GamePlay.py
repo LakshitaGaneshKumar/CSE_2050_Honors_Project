@@ -7,7 +7,6 @@ class GamePlay():
         """Initialize a new Game play object"""
         self.NUM_CONTESTANTS = 16
 
-
     def new_game(self):
         # Welcome Message
         os.system('clear')
