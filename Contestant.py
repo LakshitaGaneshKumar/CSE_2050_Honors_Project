@@ -7,7 +7,7 @@ class Contestant():
         self._found_match = False
         self._invalid_matches = set()
         self._known_invalid_matches = set()
-        # self._possible_matches = set()
+        self._possible_matches = []
 
     def set_name(self, name): 
         """
@@ -93,10 +93,15 @@ class Contestant():
         return self._known_invalid_matches
     
 
-    # def set_possible_match(self, possible_match): 
-    #     """Takes in a Contestant object and adds it to the set of possible matches, which includes every contestant who is not known to be an invalid match"""
-    #     self._possible_matches.add(possible_match)
+    def set_possible_matches(self, possible_matches): 
+        """
+        Sets contestant's possible matches
 
-    # def get_possible_matches(self): 
-    #     """Returns the set of possible matches"""
-    #     return self._possible_matches
+        Parameters:
+        possible_matches (list)
+        """
+        self._possible_matches = possible_matches
+
+    def get_possible_matches(self): 
+        """Returns the list of possible matches"""
+        return self._possible_matches

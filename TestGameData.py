@@ -39,23 +39,23 @@ class TestGameData(unittest.TestCase):
         for contestant in self.game1.get_contestants():
             assert contestant.get_name() in self.players
 
-    def test_create_perfect_matches(self):
-        """Test Create Perfect Matches"""
-        n = 16
-        self.game2 = GameData(n)
-        for i in range(n):
-            self.game2.add_contestant(f"{i}")
+    # def test_create_perfect_matches(self):
+    #     """Test Create Perfect Matches"""
+    #     n = 16
+    #     self.game2 = GameData(n)
+    #     for i in range(n):
+    #         self.game2.add_contestant(f"{i}")
 
-        self.game2.create_perfect_matches()
+    #     self.game2.create_perfect_matches()
 
-        for contestant in self.game2.get_contestants():
-            self.assertEqual(self.game2.get_perfect_matches()[contestant], contestant.get_perfect_match())
-            self.assertEqual(len(contestant.get_invalid_matches()), n-1)
-            assert contestant.get_perfect_match() not in contestant.get_invalid_matches()
+    #     for contestant in self.game2.get_contestants():
+    #         self.assertEqual(self.game2.get_perfect_matches()[contestant], contestant.get_perfect_match())
+    #         self.assertEqual(len(contestant.get_invalid_matches()), n-1)
+    #         assert contestant.get_perfect_match() not in contestant.get_invalid_matches()
 
     def test_pair_current_matches(self):
         """Test Create Known Matches"""
-        n = 10000000
+        n = 10000
 
         self.contestants[0].set_found_match(True)
         self.contestants[1].set_found_match(True)

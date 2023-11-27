@@ -3,9 +3,9 @@ import os
 import time
 
 class GamePlay():
-    def __init__(self):
+    def __init__(self, num_contestants=16):
         """Initialize a new Game play object"""
-        self.NUM_CONTESTANTS = 16
+        self.NUM_CONTESTANTS = num_contestants
 
     def new_game(self):
         # Welcome Message
@@ -68,6 +68,7 @@ class GamePlay():
     def simulate_week(self):
         """Simulate one week of the game play"""
         # Track number of weeks played
+        self.game.update_possible_matches()
         self.game.increment_weeks()
         os.system('clear')
         time.sleep(2)
