@@ -149,7 +149,7 @@ class GameData():
 
                     match = random.choice(possible_matches)
 
-                    while(match in self._paired):
+                    while(match in self._paired or match == contestant):
                         match = random.choice(possible_matches)
                     # print(match.get_name())
                     

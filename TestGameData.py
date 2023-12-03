@@ -124,6 +124,7 @@ class TestGameData(unittest.TestCase):
 
     def test_pair_current_matches2(self):
         """Test create current matches where only some of the contestants have found their perfect match"""
+       
         self.game._weeks_played = 1
 
         self.contestants[0].set_found_match(True)
@@ -147,14 +148,17 @@ class TestGameData(unittest.TestCase):
         self.assertEqual(self.contestants[0].get_current_partner(), self.contestants[1])
         self.assertEqual(self.contestants[1].get_current_partner(), self.contestants[0])
 
+        self.assertNotEqual(self.contestants[4].get_current_partner(), self.contestants[4])
         self.assertNotEqual(self.contestants[4].get_current_partner(), self.contestants[2])
         self.assertNotEqual(self.contestants[4].get_current_partner(), self.contestants[6])
         self.assertNotEqual(self.contestants[4].get_current_partner(), self.contestants[7])
 
+        self.assertNotEqual(self.contestants[3].get_current_partner(), self.contestants[3])
         self.assertNotEqual(self.contestants[3].get_current_partner(), self.contestants[4])
         self.assertNotEqual(self.contestants[3].get_current_partner(), self.contestants[5])
         self.assertNotEqual(self.contestants[3].get_current_partner(), self.contestants[6])
 
+        self.assertNotEqual(self.contestants[5].get_current_partner(), self.contestants[5])
         self.assertNotEqual(self.contestants[5].get_current_partner(), self.contestants[3])
         self.assertNotEqual(self.contestants[5].get_current_partner(), self.contestants[6])
         self.assertNotEqual(self.contestants[5].get_current_partner(), self.contestants[7]) 

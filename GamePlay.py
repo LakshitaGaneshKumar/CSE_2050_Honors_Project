@@ -122,22 +122,21 @@ class GamePlay():
             contestant.set_found_match(True)
             partner.set_found_match(True)
 
-            # Update the possible matches of the rest of the players
+            # Update the invalid matches of the rest of the players
             for person in self.game.get_contestants():
-                possible_matches = person.get_possible_matches()
-
-                if contestant in possible_matches: 
-                    possible_matches.remove(contestant)
-
-                if partner in possible_matches:
-                    possible_matches.remove(partner)
-
-                person.set_possible_matches(possible_matches)
+                if person != contestant and person != partner:
+                    person.set_known_invalid_match(contestant)
+                    person.set_known_invalid_match(partner)
+            
+            self.game.update_possible_matches()
 
             print(f"{contestant.get_name()} and {partner.get_name()} are a perfect match! They will always be paired together now.")
         else:
             contestant.set_known_invalid_match(partner)
             partner.set_known_invalid_match(contestant)
+
+            self.game.update_possible_matches()
+
             print(f"{contestant.get_name()} and {partner.get_name()} are not a perfect match. They will never be paired together again.")
 
         time.sleep(1)
