@@ -19,7 +19,7 @@ class GamePlay():
         time.sleep(1)
 
         # Create Contestant Objects
-        print("Create Your Players (input names of each contestant):")
+        print("\nCreate Your Players (input names of each contestant):")
         for i in range(1, self.NUM_CONTESTANTS + 1):
             name = input(f"Contestant {i}: ")
             self.game.add_contestant(name)
@@ -72,14 +72,14 @@ class GamePlay():
         # os.system('clear')
         time.sleep(1)
 
-        print(f"Welcome to Week {self.game.get_weeks_played()}.")
+        print(f"\nWelcome to Week {self.game.get_weeks_played()}.")
 
         # Pair up matches for the current week
         self.game.pair_current_matches()
 
         # Display current pairs
         self.display_current_pairs()
-        self.display_perfect_matches()
+        # self.display_perfect_matches()
 
         # Check if all perfect matches have been found
         if self.num_perfect_pairs_found == self.NUM_CONTESTANTS // 2:
@@ -101,7 +101,21 @@ class GamePlay():
                 os.system('clear')
                 print('\nThanks for playing "Are You The One?".')
 
-        # Else, if not all matches are found, prompt user to send a couple to the truth booth, and continue simulating weeks
+        # If no perfect pairs were found, then update all of them as invalid pairs
+        elif self.num_perfect_pairs_found == 0:
+            for contestant in self.game.get_contestants():
+                partner = contestant.get_current_partner()
+
+                contestant.set_known_invalid_match(partner)
+                partner.set_known_invalid_match(contestant)
+            
+            self.game.update_possible_matches()
+
+            print("Zero perfect matches found. None of these couples will be paired again.")
+            
+            self.simulate_week()
+
+        # Else, if some matches are found, prompt user to send a couple to the truth booth, and continue simulating weeks
         else:
             print(f"Number of Perfect Matches Found: {self.num_perfect_pairs_found}")
             self.truth_booth()
@@ -109,7 +123,7 @@ class GamePlay():
     def truth_booth(self):
         """Prompts user to send a couple to the truth booth and updates game database accordingly"""
         # User will input a couple in the format "contestant and match", which is then split into a list format
-        couple = input(f"Choose a couple to send to the Truth Booth: ")
+        couple = input(f"\nChoose a couple to send to the Truth Booth: ")
         couple_as_list = couple.split()
 
         # Extract data on the given couple

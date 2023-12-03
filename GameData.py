@@ -100,7 +100,7 @@ class GameData():
             else:
                 invalids = contestant.get_known_invalid_matches()
                 for other in self._contestants:
-                    if other not in invalids:
+                    if other not in invalids and other is not contestant:
                         possible_matches.append(other)
 
             # Update Contestant's possible matches attribute
@@ -148,11 +148,9 @@ class GameData():
                     #     print(mat.get_name())
 
                     match = random.choice(possible_matches)
-
-                    while(match in self._paired or match == contestant):
+                    while(match not in self._paired):
                         match = random.choice(possible_matches)
-                    # print(match.get_name())
-                    
+
                     self.update_database(contestant, match)
 
                     self._paired.add(contestant)
