@@ -86,14 +86,8 @@ class GameData():
             # Create empty list
             possible_matches = []
 
-            # If this is the first week of the game, everyone is a possible match except the contestant themselves
-            if self._weeks_played == 0:
-                for other in self._contestants:
-                    if other != contestant:
-                        possible_matches.append(other)
-
             # If the contestant has already found their match, their perfect match is their only possible match
-            elif contestant.get_found_match():
+            if contestant.get_found_match():
                 possible_matches.append(contestant.get_perfect_match())
 
             # Else, traverse through all contestants and add the ones that are not known to be invalids to the possible matches set
@@ -132,6 +126,7 @@ class GameData():
     def pair_current_matches(self):
         """Pairs the matches for the current week"""
         self._current_pairs = {}
+        self.update_possible_matches()
         self._paired = set()
 
         # Iterate through each contestant
