@@ -147,30 +147,3 @@ class GameData():
 
                 self._paired.add(contestant)
                 self._paired.add(match)
-
-
-                # # Check if contestant has found their match already
-                # if contestant.get_found_match():
-                #     match = contestant.get_perfect_match()
-                #     self.update_database(contestant, match)
-                    
-                #     self._paired.add(contestant)
-                #     self._paired.add(match)
-                #     # print(f"\npaired: {self._paired}")
-                
-                # # Else, pair them with someone from their possible matches list
-                # else:
-                #     possible_matches = contestant.get_possible_matches()
-                #     # for mat in possible_matches:
-                #     #     print(mat.get_name())
-
-                #     match = random.choice(possible_matches)
-                #     while(match in self._paired):
-                #         match = random.choice(possible_matches)
-                #         print(match.get_name())
-
-                #     self.update_database(contestant, match)
-
-                #     self._paired.add(contestant)
-                #     self._paired.add(match)
-                #     # print(f"\npaired else: {self._paired}")
