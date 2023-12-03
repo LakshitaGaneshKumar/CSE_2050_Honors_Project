@@ -115,7 +115,7 @@ class GamePlay():
         # Extract data on the given couple
         contestants_to_objects = self.game.get_contestants_to_objects()
         contestant = contestants_to_objects[couple_as_list[0]]
-        partner = contestant.get_current_partner()
+        partner = contestants_to_objects[couple_as_list[2]]
 
         # Check if they are a perfect match or not
         if contestant.get_perfect_match() == partner:

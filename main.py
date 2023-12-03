@@ -1,4 +1,4 @@
 from GamePlay import GamePlay
 
-game = GamePlay(8)
+game = GamePlay()
 game.new_game()
