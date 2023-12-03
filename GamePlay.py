@@ -112,7 +112,7 @@ class GamePlay():
             self.game.update_possible_matches()
 
             print("Zero perfect matches found. None of these couples will be paired again.")
-            
+
             self.simulate_week()
 
         # Else, if some matches are found, prompt user to send a couple to the truth booth, and continue simulating weeks
@@ -145,6 +145,7 @@ class GamePlay():
             self.game.update_possible_matches()
 
             print(f"{contestant.get_name()} and {partner.get_name()} are a perfect match! They will always be paired together now.")
+       
         else:
             contestant.set_known_invalid_match(partner)
             partner.set_known_invalid_match(contestant)

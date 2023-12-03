@@ -79,6 +79,8 @@ class TestGameData(unittest.TestCase):
         self.contestants[4].set_known_invalid_match(self.contestants[7])
 
         copy_for_4 = self.contestants.copy()
+        copy_for_4.remove(self.contestants[0])
+        copy_for_4.remove(self.contestants[1])
         copy_for_4.remove(self.contestants[2])
         copy_for_4.remove(self.contestants[6])
         copy_for_4.remove(self.contestants[7])
@@ -88,6 +90,8 @@ class TestGameData(unittest.TestCase):
         self.contestants[3].set_known_invalid_match(self.contestants[6])
 
         copy_for_3 = self.contestants.copy()
+        copy_for_3.remove(self.contestants[0])
+        copy_for_3.remove(self.contestants[1])
         copy_for_3.remove(self.contestants[4])
         copy_for_3.remove(self.contestants[5])
         copy_for_3.remove(self.contestants[6])
@@ -97,6 +101,8 @@ class TestGameData(unittest.TestCase):
         self.contestants[5].set_known_invalid_match(self.contestants[7])
 
         copy_for_5 = self.contestants.copy()
+        copy_for_5.remove(self.contestants[0])
+        copy_for_5.remove(self.contestants[1])
         copy_for_5.remove(self.contestants[3])
         copy_for_5.remove(self.contestants[6])
         copy_for_5.remove(self.contestants[7])

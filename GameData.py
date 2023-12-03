@@ -106,16 +106,11 @@ class GameData():
             # Update Contestant's possible matches attribute
             contestant.set_possible_matches(possible_matches)
 
-
     def update_database(self, contestant, match):
         """Takes in a contestant and their current partner/match and updates the game database"""
         # Update each Contestant object with their current partners
         contestant.set_current_partner(match)
         match.set_current_partner(contestant)
-
-        # # Update set of paired contestant
-        # self._paired.add(contestant)
-        # self._paired.add(match)
 
         # Update current pairs dictionary
         self._current_pairs[contestant] = match
@@ -148,8 +143,9 @@ class GameData():
                     #     print(mat.get_name())
 
                     match = random.choice(possible_matches)
-                    while(match not in self._paired):
+                    while(match in self._paired):
                         match = random.choice(possible_matches)
+                        print(match.get_name())
 
                     self.update_database(contestant, match)
 
