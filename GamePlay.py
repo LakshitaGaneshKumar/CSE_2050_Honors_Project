@@ -83,7 +83,7 @@ class GamePlay():
 
         # Display current pairs
         self.display_current_pairs()
-        # self.display_perfect_matches()
+        self.display_perfect_matches()
 
         # Check if all perfect matches have been found
         if self.num_perfect_pairs_found == self.NUM_CONTESTANTS // 2:
@@ -105,33 +105,38 @@ class GamePlay():
                 os.system('clear')
                 print('\nThanks for playing "Are You The One?".')
 
-        # If no perfect pairs were found, then update all of them as invalid pairs
-        elif self.num_perfect_pairs_found == 0:
-            for contestant in self.game.get_contestants():
-                partner = contestant.get_current_partner()
+        # # If no perfect pairs were found, then update all of them as invalid pairs
+        # elif self.num_perfect_pairs_found == 0:
+        #     for contestant in self.game.get_contestants():
+        #         partner = contestant.get_current_partner()
 
-                contestant.set_known_invalid_match(partner)
-                partner.set_known_invalid_match(contestant)
+        #         contestant.set_known_invalid_match(partner)
+        #         partner.set_known_invalid_match(contestant)
             
-            self.game.update_possible_matches()
+        #     self.game.update_possible_matches()
 
-            print("Zero perfect matches found. None of these couples will be paired again.")
+        #     print("Zero perfect matches found. None of these couples will be paired again.")
 
-            self.simulate_week()
+        #     self.simulate_week()
 
         # If we haven't found any new matches, then the rest of the current ones are invalid
         elif self.num_perfect_pairs_found == self.max_perfect_found:
             for contestant in self.game.get_contestants():
                 if not contestant.get_found_match():
-                    contestant.set_known_invalid_match(contestant.get_current_partner())
+                    partner = contestant.get_current_partner()
+
+                    contestant.set_known_invalid_match(partner)
+                    partner.set_known_invalid_match(contestant)
             
-            print(f"No new matches have been found. Out of these {self.NUM_CONTESTANTS // 2} pairs, {(self.NUM_CONTESTANTS // 2) - self.num_perfect_pairs_found} of them will not be paired again.")
+            self.game.update_possible_matches()
+            
+            print(f"No new perfect matches have been found. Out of these {self.NUM_CONTESTANTS // 2} pairs, {(self.NUM_CONTESTANTS // 2) - self.num_perfect_pairs_found} of them will not be paired again.")
 
             self.simulate_week()
 
         # Else, if some more matches are found, prompt user to send a couple to the truth booth, and continue simulating weeks
         else:
-            print(f"Number of Perfect Matches Found: {self.num_perfect_pairs_found}")
+            print(f"New perfect matches have been found. Current total of perfect pairs found: {self.num_perfect_pairs_found}")
             self.truth_booth()
 
     def truth_booth(self):

@@ -116,6 +116,19 @@ class GameData():
         self._current_pairs[contestant] = match
         self._current_pairs[match] = contestant
 
+        # Update possible matches for the rest of the players
+        for player in self.get_contestants():
+            if player is not contestant and player is not match:
+                possible_matches = player.get_possible_matches()
+
+                if contestant in possible_matches:
+                    possible_matches.remove(contestant)
+
+                if match in possible_matches:
+                    possible_matches.remove(match)
+
+                player.set_possible_matches(possible_matches)
+
     def pair_current_matches(self):
         """Pairs the matches for the current week"""
         self._current_pairs = {}
@@ -127,28 +140,37 @@ class GameData():
             # Check if contestant is not paired yet
             if contestant not in self._paired:
 
-                # Check if contestant has found their match already
-                if contestant.get_found_match():
-                    match = contestant.get_perfect_match()
-                    self.update_database(contestant, match)
+                possible_matches = contestant.get_possible_matches()
+                match = random.choice(possible_matches)
+
+                self.update_database(contestant, match)
+
+                self._paired.add(contestant)
+                self._paired.add(match)
+
+
+                # # Check if contestant has found their match already
+                # if contestant.get_found_match():
+                #     match = contestant.get_perfect_match()
+                #     self.update_database(contestant, match)
                     
-                    self._paired.add(contestant)
-                    self._paired.add(match)
-                    # print(f"\npaired: {self._paired}")
+                #     self._paired.add(contestant)
+                #     self._paired.add(match)
+                #     # print(f"\npaired: {self._paired}")
                 
-                # Else, pair them with someone from their possible matches list
-                else:
-                    possible_matches = contestant.get_possible_matches()
-                    # for mat in possible_matches:
-                    #     print(mat.get_name())
+                # # Else, pair them with someone from their possible matches list
+                # else:
+                #     possible_matches = contestant.get_possible_matches()
+                #     # for mat in possible_matches:
+                #     #     print(mat.get_name())
 
-                    match = random.choice(possible_matches)
-                    while(match in self._paired):
-                        match = random.choice(possible_matches)
-                        print(match.get_name())
+                #     match = random.choice(possible_matches)
+                #     while(match in self._paired):
+                #         match = random.choice(possible_matches)
+                #         print(match.get_name())
 
-                    self.update_database(contestant, match)
+                #     self.update_database(contestant, match)
 
-                    self._paired.add(contestant)
-                    self._paired.add(match)
-                    # print(f"\npaired else: {self._paired}")
+                #     self._paired.add(contestant)
+                #     self._paired.add(match)
+                #     # print(f"\npaired else: {self._paired}")
