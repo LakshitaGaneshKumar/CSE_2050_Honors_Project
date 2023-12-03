@@ -6,6 +6,7 @@ class GamePlay():
     def __init__(self, num_contestants=16):
         """Initialize a new Game play object"""
         self.NUM_CONTESTANTS = num_contestants
+        self.max_perfect_found = 0
 
     def new_game(self):
         # Welcome Message
@@ -52,6 +53,9 @@ class GamePlay():
                 # Update the list of contestants who have been displayed on screen already
                 displayed.append(key)
                 displayed.append(current_pairs[key])
+        
+        if self.num_perfect_pairs_found > self.max_perfect_found:
+            self.max_perfect_found = self.num_perfect_pairs_found
 
     def display_perfect_matches(self):
         """Displays the perfect matches for testing purposes"""
@@ -115,7 +119,17 @@ class GamePlay():
 
             self.simulate_week()
 
-        # Else, if some matches are found, prompt user to send a couple to the truth booth, and continue simulating weeks
+        # If we haven't found any new matches, then the rest of the current ones are invalid
+        elif self.num_perfect_pairs_found == self.max_perfect_found:
+            for contestant in self.game.get_contestants():
+                if not contestant.get_found_match():
+                    contestant.set_known_invalid_match(contestant.get_current_partner())
+            
+            print(f"No new matches have been found. Out of these {self.NUM_CONTESTANTS // 2} pairs, {(self.NUM_CONTESTANTS // 2) - self.num_perfect_pairs_found} of them will not be paired again.")
+
+            self.simulate_week()
+
+        # Else, if some more matches are found, prompt user to send a couple to the truth booth, and continue simulating weeks
         else:
             print(f"Number of Perfect Matches Found: {self.num_perfect_pairs_found}")
             self.truth_booth()
