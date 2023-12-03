@@ -4,7 +4,7 @@ import random
 class GameData():
     def __init__(self, num_contestants):
         self._num_contestants = num_contestants
-        self._contestants = set()
+        self._contestants = []
         self._perfect_matches = {}
         self._current_pairs = {}
         self._contestants_to_objects = {}
@@ -19,13 +19,13 @@ class GameData():
         contestant (String)
         """
         player = Contestant(contestant)
-        self._contestants.add(player)
+        self._contestants.append(player)
 
         # Maps the string representation of the contestant's name to its Contestant object representation
         self._contestants_to_objects[contestant] = player
 
     def get_contestants(self):
-        """Returns the set of all Contestant objects in the current game play"""
+        """Returns the list of all Contestant objects in the current game play"""
         return self._contestants
     
     def get_contestants_to_objects(self):
@@ -52,43 +52,16 @@ class GameData():
         """Increment the number of weeks played"""
         self._weeks_played += 1
 
-    def update_possible_matches(self):
-        """Updates the possible matches for each contestant based on current game knowledge"""
-        for contestant in self._contestants:
-            # Create empty set
-            possible_matches = []
-
-            # If this is the first week of the game, everyone is a possible match except the contestant themselves
-            if self._weeks_played == 0:
-                for other in self._contestants:
-                    if other != contestant:
-                        possible_matches.append(other)
-
-            # If the contestant has already found their match, their perfect match is their only possible match
-            elif contestant.get_found_match():
-                possible_matches.append(contestant.get_perfect_match)
-
-            # Else, traverse through all contestants and add the ones that are not known to be invalids to the possible matches set
-            else:
-                invalids = contestant.get_known_invalid_matches()
-                for other in self._contestants:
-                    if other not in invalids:
-                        possible_matches.append(other)
-
-            # Update Contestant's possible matches attribute
-            contestant.set_possible_matches(possible_matches)
-
     def create_perfect_matches(self):
         """Generates perfect matches and updates Contestant objects with their perfect match"""
         # Create copy of contestants set as a list and shuffle that list
-        self.contestants_list = list(self._contestants)
-        random.shuffle(self.contestants_list)
+        random.shuffle(self._contestants)
 
         # Update each contestant with their perfect match
         for i in range(0, self._num_contestants, 2):
             # Store contestants in temporary variables
-            contestant1 = self.contestants_list[i]
-            contestant2 = self.contestants_list[i+1]
+            contestant1 = self._contestants[i]
+            contestant2 = self._contestants[i+1]
             
             # Use temporary variables to update the perfect match attribute of each contestant
             contestant1.set_perfect_match(contestant2)
@@ -105,6 +78,33 @@ class GameData():
                     key.set_invalid_match(other)
                 if self._perfect_matches[other] != self._perfect_matches[key]:
                     key.set_invalid_match(self._perfect_matches[other])
+            # print(f"{key.get_name()}'s Invalids: {key.get_invalid_matches()}")
+
+    def update_possible_matches(self):
+        """Updates the possible matches for each contestant based on current game knowledge"""
+        for contestant in self._contestants:
+            # Create empty list
+            possible_matches = []
+
+            # If this is the first week of the game, everyone is a possible match except the contestant themselves
+            if self._weeks_played == 0:
+                for other in self._contestants:
+                    if other != contestant:
+                        possible_matches.append(other)
+
+            # If the contestant has already found their match, their perfect match is their only possible match
+            elif contestant.get_found_match():
+                possible_matches.append(contestant.get_perfect_match())
+
+            # Else, traverse through all contestants and add the ones that are not known to be invalids to the possible matches set
+            else:
+                invalids = contestant.get_known_invalid_matches()
+                for other in self._contestants:
+                    if other not in invalids:
+                        possible_matches.append(other)
+
+            # Update Contestant's possible matches attribute
+            contestant.set_possible_matches(possible_matches)
 
 
     def update_database(self, contestant, match):
@@ -113,9 +113,9 @@ class GameData():
         contestant.set_current_partner(match)
         match.set_current_partner(contestant)
 
-        # Update set of paired contestant
-        self._paired.add(contestant)
-        self._paired.add(match)
+        # # Update set of paired contestant
+        # self._paired.add(contestant)
+        # self._paired.add(match)
 
         # Update current pairs dictionary
         self._current_pairs[contestant] = match
@@ -169,8 +169,6 @@ class GameData():
     #                 self.update_database(current, match)
     #                 break
                 
-
-
         # for contestant in self._contestants:
         #     if contestant not in self._paired:
         #         i = 0
@@ -197,15 +195,31 @@ class GameData():
         """Pairs the matches for the current week"""
         self._paired = set()
 
+        # Iterate through each contestant
         for contestant in self._contestants:
-            i = 0
-            possible_matches = contestant.get_possible_matches()
-            print(i)
-            match = possible_matches[i]
-            i += 1
 
-            while(match in self._paired and i < len(possible_matches)):
-                match = possible_matches[i]
-                i += 1
+            # Check if contestant is not paired yet
+            if contestant not in self._paired:
 
-            self.update_database(contestant, match)
+                # Check if contestant has found their match already
+                if contestant.get_found_match():
+                    match = contestant.get_perfect_match()
+                    self.update_database(contestant, match)
+                    
+                    self._paired.add(contestant)
+                    self._paired.add(match)
+                    print(f"\npaired: {self._paired}")
+                
+                # Else, pair them with someone from thier possible matches list
+                else:
+                    possible_match = contestant.get_possible_matches()[0]
+                    
+                    self.update_database(contestant, possible_match)
+
+                    self._paired.add(contestant)
+                    self._paired.add(possible_match)
+                    print(f"\npaired else: {self._paired}")
+                
+
+
+        

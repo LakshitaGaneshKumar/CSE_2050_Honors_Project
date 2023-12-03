@@ -13,7 +13,6 @@ class GamePlay():
         print("Welcome to Are You The One!")
 
         # Create new game database
-        os.system('clear')
         print(f'Get ready to play "Are You The One?" With {self.NUM_CONTESTANTS} Contestants!')
         self.game = GameData(self.NUM_CONTESTANTS)
 
@@ -70,8 +69,8 @@ class GamePlay():
         # Track number of weeks played
         self.game.update_possible_matches()
         self.game.increment_weeks()
-        os.system('clear')
-        time.sleep(2)
+        # os.system('clear')
+        time.sleep(1)
 
         print(f"Welcome to Week {self.game.get_weeks_played()}.")
 
@@ -122,6 +121,19 @@ class GamePlay():
         if contestant.get_perfect_match() == partner:
             contestant.set_found_match(True)
             partner.set_found_match(True)
+
+            # Update the possible matches of the rest of the players
+            for person in self.game.get_contestants():
+                possible_matches = person.get_possible_matches()
+
+                if contestant in possible_matches: 
+                    possible_matches.remove(contestant)
+
+                if partner in possible_matches:
+                    possible_matches.remove(partner)
+
+                person.set_possible_matches(possible_matches)
+
             print(f"{contestant.get_name()} and {partner.get_name()} are a perfect match! They will always be paired together now.")
         else:
             contestant.set_known_invalid_match(partner)

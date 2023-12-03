@@ -104,4 +104,8 @@ class Contestant():
 
     def get_possible_matches(self): 
         """Returns the list of possible matches"""
+        # match = []
+        # for person in self._possible_matches:
+        #     match.append(person.get_name())
+        # return match
         return self._possible_matches
