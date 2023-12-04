@@ -48,6 +48,7 @@ class GameData():
         """Returns the number of weeks played"""
         return self._weeks_played
     
+    
     def increment_weeks(self):
         """Increment the number of weeks played"""
         self._weeks_played += 1
